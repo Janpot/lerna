@@ -17,14 +17,16 @@ describe("npm-publish", () => {
   const pkg = new Package({ name: "test", version: "1.10.100" }, "/test/npmPublish");
 
   it("runs npm publish in a directory with --tag support", async () => {
-    await npmPublish(pkg, "published-tag", { npmClient: "npm" });
+    await npmPublish(pkg, "published-tag", { npmClient: "npm", otp: "12345" });
 
     expect(ChildProcessUtilities.exec).lastCalledWith(
       "npm",
       ["publish", "--ignore-scripts", "--tag", "published-tag", "test-1.10.100.tgz"],
       {
         cwd: pkg.location,
-        env: {},
+        env: {
+          npm_config_otp: "12345",
+        },
         pkg,
       }
     );
